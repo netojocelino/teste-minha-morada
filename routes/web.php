@@ -16,3 +16,16 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/forgot-password', function () {
+    return [
+        'page' => 'forgot-password'
+    ];
+    return view('auth.forgot-password');
+})->middleware('guest')->name('password.request');
+
+Route::get('/reset-password/{token}', function (string $token) {
+    return [
+        'token' => $token,
+    ];
+})->name('password.reset');
