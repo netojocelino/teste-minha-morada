@@ -56,3 +56,25 @@ Route::get('/cep', function (Request $request) {
         return response($err->getMessage(), 500);
     }
 });
+
+Route::post('/user', function (Request $request) {
+    $body = $request->only([
+        "name",
+        "email",
+        "password",
+    ]);
+
+    $userModel = new Model\User([
+        "name" => $body["name"],
+        "email" => $body["email"],
+        "password" => Hash::make($body["password"]),
+    ]);
+
+    $userModel->save();
+
+
+    return response()->json($userModel);
+
+    return response()
+        ->json($body);
+});
