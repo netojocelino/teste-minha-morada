@@ -40,7 +40,7 @@ Route::get('/cep', function (Request $request) {
         }
 
         $service = new CepapiService();
-        $response = $service->getAddressByCep($cep)->json();
+        $response = $service->getAddressByCep($cep, true);
 
         $address = [
             "cep" => $response["cep"] ?? $cep,
