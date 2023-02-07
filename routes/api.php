@@ -62,6 +62,12 @@ Route::post('/user', function (Request $request) {
         "name",
         "email",
         "password",
+        "address.cep",
+        "address.state",
+        "address.number",
+        "address.city",
+        "address.neighborhood",
+        "address.street",
     ]);
 
     $userModel = new Model\User([
@@ -72,6 +78,17 @@ Route::post('/user', function (Request $request) {
 
     $userModel->save();
 
+    $addressModel = new Model\Address([
+        "cep" => $body['address']['cep'],
+        "state" => $body['address']['state'],
+        "number" => $body['address']['number'],
+        "city" => $body['address']['city'],
+        "neighborhood" => $body['address']['neighborhood'],
+        "street" => $body['address']['street'],
+        "user_id" => $userModel->id,
+    ]);
+
+    $addressModel->save();
 
     return response()->json($userModel);
 
