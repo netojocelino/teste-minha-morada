@@ -1,7 +1,9 @@
 <?php
 
+use App\Models as Model;
 use App\Services\CepapiService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
 /*
