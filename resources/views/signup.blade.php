@@ -16,25 +16,72 @@
                 <h1>Cadastrar</h1>
 
 
-                <form class="card p-2">
+                <form class="card p-2" method="POST" action="{{ route('register.action') }}">
                     <div class="input-group">
                         <label for="name" class="form-label mt-2 col-12 col-md-4">Nome</label>
-                        <input type="text" required name="full_name" class="form-control col-12 col-md-8" required>
+                        <input type="text" required name="full_name" class="form-control col-12 col-md-8" >
                     </div>
 
                     <div class="input-group mt-4">
                         <label for="email" class="form-label mt-2 col-12 col-md-4">Endereço de email</label>
-                        <input type="email" required name="email" class="form-control col-12 col-md-8" required>
+                        <input type="email" required name="email" class="form-control col-12 col-md-8">
                     </div>
 
                     <div class="input-group mt-4">
                         <label for="password" class="form-label mt-2 col-12 col-md-4">Senha</label>
-                        <input type="password" required name="password" class="form-control col-12 col-md-8" required>
+                        <input type="password" required name="password" class="form-control col-12 col-md-8">
                     </div>
 
                     <div class="input-group mt-4">
                         <label for="password" class="form-label mt-2 col-12 col-md-4">Confirmar Senha</label>
-                        <input type="password" required name="password_confirmation" class="form-control col-12 col-md-8" required>
+                        <input type="password" required name="password_confirmation" class="form-control col-12 col-md-8">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="input-group mt-4">
+                                <label for="cep" class="form-label mt-2 col-12 col-md-4">Código CEP</label>
+                                <input type="text" required name="cep" class="form-control col-12 col-md-8">
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="input-group mt-4">
+                                <label for="city" class="form-label mt-2 col-12 col-md-4">Cidade</label>
+                                <input type="text" required name="city" class="form-control col-12 col-md-8">
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="input-group mt-4">
+                                <label for="state" class="form-label mt-2 col-12 col-md-4">Estado</label>
+                                <input type="text" required name="state" class="form-control col-12 col-md-8">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="input-group mt-4">
+                                <label for="street" class="form-label mt-2 col-12 col-md-4">Rua</label>
+                                <input type="text" required name="street" class="form-control col-12 col-md-8">
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="input-group mt-4">
+                                <label for="number" class="form-label mt-2 col-12 col-md-4">Número</label>
+                                <input type="text" required name="number" class="form-control col-12 col-md-8">
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="input-group mt-4">
+                                <label for="neighborhood" class="form-label mt-2 col-12 col-md-4">Bairro</label>
+                                <input type="text" required name="neighborhood" class="form-control col-12 col-md-8">
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="col-12 mt-4">
@@ -55,6 +102,8 @@
 
     <script>
         const $btn = document.querySelector("[name=signup]");
+        const $cep = document.querySelector("[name=cep]");
+        let cepDebounce = null;
 
         const signBtn = async (e) => {
             e.preventDefault();
@@ -65,6 +114,12 @@
             const $email = document.querySelector("input[name=email]");
             const $password_confirmation = document.querySelector("input[name=password_confirmation]");
             const $password = document.querySelector("input[name=password]");
+
+            const $city = document.querySelector("[name=city]")
+            const $neighborhood = document.querySelector("[name=neighborhood]")
+            const $state = document.querySelector("[name=state]")
+            const $street = document.querySelector("[name=street]")
+            const $number = document.querySelector("[name=number]")
 
             if (
                 $name.value.trim().length === 0 ||
@@ -85,7 +140,7 @@
                     return;
             }
 
-            fetch('/api/user', {
+            fetch('/api/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -96,6 +151,12 @@
                     password: $password.value,
                     password_confirmation: $password_confirmation.value,
                     address: {
+                        cep: $cep.value,
+                        city: $city.value,
+                        neighborhood: $neighborhood.value,
+                        state: $state.value,
+                        street: $street.value,
+                        number: $number.value,
                     },
                 })
             })
@@ -117,6 +178,39 @@
         }
 
         $btn.addEventListener('click', signBtn)
+        $cep.addEventListener('input', function (e) {
+            e.preventDefault();
+            clearTimeout(cepDebounce);
+
+            cepDebounce = setTimeout(() => {
+                if (cepDebounce !== null) {
+                    clearTimeout(cepDebounce)
+                }
+
+                if (!(/^[0-9]{5}-?[0-9]{3}$/.test($cep.value))) {
+                    return;
+                }
+
+                $cep.disabled = true
+
+                fetch(`/api/cep/?cep=${$cep.value}`)
+                    .then(data => data.json())
+                    .then(data => {
+                        document.querySelector("[name=city]").value = data.city;
+                        document.querySelector("[name=neighborhood]").value = data.neighborhood;
+                        document.querySelector("[name=state]").value = data.state;
+                        document.querySelector("[name=street]").value = data.street;
+
+                        return data
+                    })
+
+
+                    .catch((err) => console.error(err))
+                    .finally(() => {
+                        $cep.disabled = false
+                    })
+            }, 400);
+        })
     </script>
 </body>
 </html>

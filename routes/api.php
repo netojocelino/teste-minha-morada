@@ -63,7 +63,7 @@ Route::get('/cep', function (Request $request) {
     }
 });
 
-Route::post('/user', function (Request $request) {
+Route::post('/register', function (Request $request) {
 
     $validator = Validator::make($request->all(), [
         "name" => 'required',
