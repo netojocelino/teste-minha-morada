@@ -3,9 +3,7 @@
 use App\Models as Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Validator;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,14 +56,12 @@ Route::get('/signup', function () {
 })->name('register');
 
 Route::get('/forgot-password', function () {
-    return [
-        'page' => 'forgot-password'
-    ];
     return view('auth.forgot-password');
 })->middleware('guest')->name('password.request');
 
-Route::get('/reset-password/{token}', function (string $token) {
-    return [
-        'token' => $token,
-    ];
+Route::get('/reset-password/{token}', function (string $token, Request $request) {
+    return view('auth.reset-password', [
+            'token' => $token,
+            'email' => $request->query('email'),
+        ]);
 })->name('password.reset');
