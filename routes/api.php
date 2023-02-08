@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Facades\Validator;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +64,27 @@ Route::get('/cep', function (Request $request) {
 });
 
 Route::post('/user', function (Request $request) {
+
+    $validator = Validator::make($request->all(), [
+        "name" => 'required',
+        "email" => 'required|email|unique:users,email',
+        "password" => 'required|confirmed',
+        "address.*" => 'required|array',
+        "address.cep" => 'required|regex:/[0-9]{5}-?[0-9]{3}/',
+        "address.state" => 'required',
+        "address.number" => 'required',
+        "address.city" => 'required',
+        "address.neighborhood" => 'required',
+        "address.street" => 'required',
+    ]);
+
+    if ($validator->fails()) {
+        return response()
+            ->json([
+                'errors' => implode(" ", $validator->errors()->all()),
+            ], 500);
+    }
+
     $body = $request->only([
         "name",
         "email",

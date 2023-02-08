@@ -56,7 +56,7 @@
     <script>
         const $btn = document.querySelector("[name=signup]");
 
-        const signBtn = (e) => {
+        const signBtn = async (e) => {
             e.preventDefault();
 
             $btn.disabled = true;
@@ -85,7 +85,34 @@
                     return;
             }
 
-            $btn.disabled = false;
+            fetch('/api/user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: $name.value,
+                    email: $email.value,
+                    password: $password.value,
+                    password_confirmation: $password_confirmation.value,
+                    address: {
+                    },
+                })
+            })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.errors) {
+                    alert(response.errors)
+                    return
+                }
+                console.log(response)
+            })
+            .catch(err => {
+                console.error({err})
+            })
+            .finally( () => {
+                $btn.disabled = false;
+            })
 
         }
 
