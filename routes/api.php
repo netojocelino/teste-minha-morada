@@ -121,7 +121,7 @@ Route::post('/register', function (Request $request) {
 
     return response()
         ->json($body);
-});
+})->name('register.action');
 
 Route::post('/forgot-password', function (Request $request) {
     $request->validate([
