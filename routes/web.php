@@ -1,8 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Models as Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,9 +19,11 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
-    return view('home');
+    return view('home', [
+        'users' => Model\User::paginate(),
+    ]);
 })
-->middleware('auth')
+// ->middleware('auth')
 ->name('dashboard');
 
 Route::get('/login', function () {
@@ -50,7 +55,7 @@ Route::post('/auth/login', function (Request $request) {
 
 Route::get('/signup', function () {
     return view('signup');
-});
+})->name('register');
 
 Route::get('/forgot-password', function () {
     return [
