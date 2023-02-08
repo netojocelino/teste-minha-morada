@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,12 +16,37 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('home');
+})
+->middleware('auth')
+->name('dashboard');
 
 Route::get('/login', function () {
     return view('login');
-});
+})->name('login');
+
+Route::post('/auth/login', function (Request $request) {
+    try {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        $userData = $request->only([
+            'email',
+            'password',
+        ]);
+
+        if (Auth::attempt($userData)) {
+            return redirect('/');
+        }
+
+        return redirect('dashboard');
+    } catch (\Exception $exception) {
+        return redirect('/login')
+            ->withErrors('Invalid credentials');
+    }
+})->name('forms.login');
 
 Route::get('/signup', function () {
     return view('signup');

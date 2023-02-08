@@ -16,7 +16,7 @@
                 <h1>Login</h1>
 
 
-                <form class="card p-2">
+                <form class="card p-2" method="POST" action="{{ route('forms.login') }}">
                     <div class="input-group">
                         <label for="email" class="form-label mt-2 col-12 col-md-4">Endereço de email</label>
                         <input type="email" required name="email" class="form-control col-12 col-md-8">
@@ -28,7 +28,7 @@
                     </div>
 
                     <div class="col-12 mt-4">
-                        <button type="button" name="login" class="btn btn-primary col-8">
+                        <button type="submit" class="btn btn-primary col-8">
                             Entrar
                         </button>
                     </div>
@@ -42,28 +42,5 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-
-    <script>
-        const $btn = document.querySelector("[name=login]");
-
-        const loginBtn = (e) => {
-            e.preventDefault();
-
-            $btn.disabled = true;
-
-            const $email = document.querySelector("[name=email]");
-            const $password = document.querySelector("[name=password]");
-
-            console.log({
-                email: $email.value,
-                password: $password.value,
-            })
-
-            $btn.disabled = false;
-
-        }
-
-        $btn.addEventListener('click', loginBtn)
-    </script>
 </body>
 </html>
