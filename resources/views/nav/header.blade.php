@@ -27,14 +27,6 @@
                     Cadastrar
             </a>
         </li>
-        <li class="nav-item">
-            <a
-                class="nav-link {{ $page == 'forgot-password' ? 'active' : '' }}"
-                href="{{ url('/forgot-password') }}"
-            >
-                    Recuperar Senha
-            </a>
-        </li>
         @auth
             <li class="nav-item">
                 <a
@@ -42,6 +34,15 @@
                     href="{{ url('/logout') }}"
                 >
                         Sair
+                </a>
+            </li>
+        @else
+            <li class="nav-item">
+                <a
+                    class="nav-link {{ $page == 'forgot-password' ? 'active' : '' }}"
+                    href="{{ url('/forgot-password') }}"
+                >
+                        Recuperar Senha
                 </a>
             </li>
         @endauth
