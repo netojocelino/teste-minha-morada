@@ -120,3 +120,8 @@ Route::get('/reset-password/{token}', function (string $token, Request $request)
             'email' => $request->query('email'),
         ]);
 })->name('password.reset');
+
+Route::get('/logout', function () {
+    Auth::logout();
+    return redirect('/login');
+});

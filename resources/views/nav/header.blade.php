@@ -34,6 +34,16 @@
                     Recuperar Senha
             </a>
         </li>
+        @auth
+            <li class="nav-item">
+                <a
+                    class="nav-link"
+                    href="{{ url('/logout') }}"
+                >
+                        Sair
+                </a>
+            </li>
+        @endauth
 
     </ul>
 </nav>
