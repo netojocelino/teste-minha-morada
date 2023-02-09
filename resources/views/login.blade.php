@@ -17,6 +17,7 @@
 
 
                 <form class="card p-2" method="POST" action="{{ route('forms.login') }}">
+                    @csrf
                     <div class="input-group">
                         <label for="email" class="form-label mt-2 col-12 col-md-4">Endereço de email</label>
                         <input type="email" required name="email" class="form-control col-12 col-md-8">

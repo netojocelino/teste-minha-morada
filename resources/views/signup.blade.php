@@ -17,6 +17,7 @@
 
 
                 <form class="card p-2" method="POST" action="{{ route('register.action') }}">
+                    @csrf
                     <div class="input-group">
                         <label for="name" class="form-label mt-2 col-12 col-md-4">Nome</label>
                         <input type="text" required name="full_name" class="form-control col-12 col-md-8" >
