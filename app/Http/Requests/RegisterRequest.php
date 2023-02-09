@@ -18,7 +18,7 @@ class RegisterRequest extends FormRequest
             "email" => 'required|email|unique:users,email',
             "password" => 'required|confirmed',
             "address.*" => 'required|array',
-            "address.cep" => 'required|regex:/[0-9]{5}-?[0-9]{3}/',
+            "address.cep" => 'required|regex:/^[0-9]{5}-?[0-9]{3}$/',
             "address.state" => 'required',
             "address.number" => 'required',
             "address.city" => 'required',
