@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,24 +79,30 @@ Route::post('/register', function (Validate\RegisterRequest $request) {
         "address.street",
     ])['address'];
 
-    $userModel = new Model\User([
-        "name" => $userBody["full_name"],
-        "email" => $userBody["email"],
-        "password" => Hash::make($userBody["password"]),
-    ]);
+    DB::beginTransaction();
+    try {
+        $userModel = new Model\User([
+            "name" => $userBody["full_name"],
+            "email" => $userBody["email"],
+            "password" => Hash::make($userBody["password"]),
+        ]);
 
-    $userModel->save();
+        $userModel->save();
 
-    $addressModel = new Model\Address(array_merge($addressBody, [
-        "user_id" => $userModel->id,
-    ]));
+        $addressModel = new Model\Address(array_merge($addressBody, [
+            "user_id" => $userModel->id,
+        ]));
 
-    $addressModel->save();
-
-    Auth::attempt([
-        'email' => $userBody['email'],
-        'password' => $userBody['password'],
-    ]);
+        $addressModel->save();
+        Auth::attempt([
+            'email' => $userBody['email'],
+            'password' => $userBody['password'],
+        ]);
+        DB::commit();
+    } catch (\Exception $exception) {
+        DB::rollBack();
+        return back()->withErrors([ 'error' => $exception->getMessage() ]);
+    }
 
     return redirect('/')
         ->with([ 'message' => 'Criado com sucesso.' ]);
