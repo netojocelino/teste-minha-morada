@@ -56,25 +56,14 @@ Route::get('/signup', function () {
     return view('signup');
 })->name('register');
 
-Route::post('/register', function (Request $request) {
-    $validator = Validator::make($request->all(), [
-        "full_name" => 'required',
-        "email" => 'required|email|unique:users,email',
-        "password" => 'required|confirmed',
-        "address.*" => 'required|array',
-        "address.cep" => 'required|regex:/[0-9]{5}-?[0-9]{3}/',
-        "address.state" => 'required',
-        "address.number" => 'required',
-        "address.city" => 'required',
-        "address.neighborhood" => 'required',
-        "address.street" => 'required',
-    ]);
+Route::post('/register', function (Validate\RegisterRequest $request) {
+    $validator = Validator::make($request->all(), $request->rules());
 
     if ($validator->fails()) {
         return back()->withErrors($validator->errors()->all());
     }
 
-    $body = $request->only([
+    $body = $request->safe([
         "full_name",
         "email",
         "password",
