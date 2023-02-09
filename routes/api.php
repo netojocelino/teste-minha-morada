@@ -63,66 +63,6 @@ Route::get('/cep', function (Request $request) {
     }
 });
 
-Route::post('/register', function (Request $request) {
-
-    $validator = Validator::make($request->all(), [
-        "name" => 'required',
-        "email" => 'required|email|unique:users,email',
-        "password" => 'required|confirmed',
-        "address.*" => 'required|array',
-        "address.cep" => 'required|regex:/[0-9]{5}-?[0-9]{3}/',
-        "address.state" => 'required',
-        "address.number" => 'required',
-        "address.city" => 'required',
-        "address.neighborhood" => 'required',
-        "address.street" => 'required',
-    ]);
-
-    if ($validator->fails()) {
-        return response()
-            ->json([
-                'errors' => implode(" ", $validator->errors()->all()),
-            ], 500);
-    }
-
-    $body = $request->only([
-        "name",
-        "email",
-        "password",
-        "address.cep",
-        "address.state",
-        "address.number",
-        "address.city",
-        "address.neighborhood",
-        "address.street",
-    ]);
-
-    $userModel = new Model\User([
-        "name" => $body["name"],
-        "email" => $body["email"],
-        "password" => Hash::make($body["password"]),
-    ]);
-
-    $userModel->save();
-
-    $addressModel = new Model\Address([
-        "cep" => $body['address']['cep'],
-        "state" => $body['address']['state'],
-        "number" => $body['address']['number'],
-        "city" => $body['address']['city'],
-        "neighborhood" => $body['address']['neighborhood'],
-        "street" => $body['address']['street'],
-        "user_id" => $userModel->id,
-    ]);
-
-    $addressModel->save();
-
-    return response()->json($userModel);
-
-    return response()
-        ->json($body);
-})->name('register.action');
-
 Route::post('/forgot-password', function (Request $request) {
     $request->validate([
         'email' => 'required|email',
