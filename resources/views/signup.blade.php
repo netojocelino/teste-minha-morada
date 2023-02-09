@@ -15,14 +15,14 @@
             <div class="py-5 text-center">
                 <h1>Cadastrar</h1>
 
-                <div class="alert alert-danger" style="display: none;" role="alert" name="error">
-                    <span></span>
+                <div class="alert alert-danger" style="{{ empty($errors->all()) ? 'display: none;' : '' }}" role="alert" name="error">
+                    <span>{{ implode(" ",$errors->all()) }}</span>
                 </div>
 
                 <form class="card p-2" method="POST" action="{{ route('register.action') }}">
                     @csrf
                     <div class="input-group">
-                        <label for="name" class="form-label mt-2 col-12 col-md-4">Nome</label>
+                        <label for="full_name" class="form-label mt-2 col-12 col-md-4">Nome</label>
                         <input type="text" required name="full_name" class="form-control col-12 col-md-8" >
                     </div>
 
@@ -44,22 +44,22 @@
                     <div class="row">
                         <div class="col-4">
                             <div class="input-group mt-4">
-                                <label for="cep" class="form-label mt-2 col-12 col-md-4">Código CEP</label>
-                                <input type="text" required name="cep" class="form-control col-12 col-md-8">
+                                <label for="address[cep]" class="form-label mt-2 col-12 col-md-4">Código CEP</label>
+                                <input type="text" required name="address[cep]" class="form-control col-12 col-md-8">
                             </div>
                         </div>
 
                         <div class="col-4">
                             <div class="input-group mt-4">
-                                <label for="city" class="form-label mt-2 col-12 col-md-4">Cidade</label>
-                                <input type="text" required name="city" class="form-control col-12 col-md-8">
+                                <label for="address[city]" class="form-label mt-2 col-12 col-md-4">Cidade</label>
+                                <input type="text" required name="address[city]" class="form-control col-12 col-md-8">
                             </div>
                         </div>
 
                         <div class="col-4">
                             <div class="input-group mt-4">
-                                <label for="state" class="form-label mt-2 col-12 col-md-4">Estado</label>
-                                <input type="text" required name="state" class="form-control col-12 col-md-8">
+                                <label for="address[state]" class="form-label mt-2 col-12 col-md-4">Estado</label>
+                                <input type="text" required name="address[state]" class="form-control col-12 col-md-8">
                             </div>
                         </div>
                     </div>
@@ -67,29 +67,29 @@
                     <div class="row">
                         <div class="col-4">
                             <div class="input-group mt-4">
-                                <label for="street" class="form-label mt-2 col-12 col-md-4">Rua</label>
-                                <input type="text" required name="street" class="form-control col-12 col-md-8">
+                                <label for="address[street]" class="form-label mt-2 col-12 col-md-4">Rua</label>
+                                <input type="text" required name="address[street]" class="form-control col-12 col-md-8">
                             </div>
                         </div>
 
                         <div class="col-4">
                             <div class="input-group mt-4">
-                                <label for="number" class="form-label mt-2 col-12 col-md-4">Número</label>
-                                <input type="text" required name="number" class="form-control col-12 col-md-8">
+                                <label for="address[number]" class="form-label mt-2 col-12 col-md-4">Número</label>
+                                <input type="text" required name="address[number]" class="form-control col-12 col-md-8">
                             </div>
                         </div>
 
                         <div class="col-4">
                             <div class="input-group mt-4">
-                                <label for="neighborhood" class="form-label mt-2 col-12 col-md-4">Bairro</label>
-                                <input type="text" required name="neighborhood" class="form-control col-12 col-md-8">
+                                <label for="address[neighborhood]" class="form-label mt-2 col-12 col-md-4">Bairro</label>
+                                <input type="text" required name="address[neighborhood]" class="form-control col-12 col-md-8">
                             </div>
                         </div>
 
                     </div>
 
                     <div class="col-12 mt-4">
-                        <button type="button" name="signup" class="btn btn-primary col-8">
+                        <button type="submit" class="btn btn-primary col-8">
                             Cadastrar
                         </button>
                     </div>
@@ -106,8 +106,9 @@
 
     <script>
         const $btn = document.querySelector("[name=signup]");
-        const $cep = document.querySelector("[name=cep]");
+        const $cep = document.querySelector("[name='address[cep]']");
         const $error = document.querySelector("[name='error']");
+
         let cepDebounce = null;
 
         const signBtn = async (e) => {
@@ -197,15 +198,20 @@
                     return;
                 }
 
+                document.querySelector("[name='address[city]']").value = '';
+                document.querySelector("[name='address[neighborhood]']").value = '';
+                document.querySelector("[name='address[state]']").value = '';
+                document.querySelector("[name='address[street]']").value = '';
+
                 $cep.disabled = true
 
                 fetch(`/api/cep/?cep=${$cep.value}`)
                     .then(data => data.json())
                     .then(data => {
-                        document.querySelector("[name=city]").value = data.city;
-                        document.querySelector("[name=neighborhood]").value = data.neighborhood;
-                        document.querySelector("[name=state]").value = data.state;
-                        document.querySelector("[name=street]").value = data.street;
+                        document.querySelector("[name='address[city]']").value = data.city;
+                        document.querySelector("[name='address[neighborhood]']").value = data.neighborhood;
+                        document.querySelector("[name='address[state]']").value = data.state;
+                        document.querySelector("[name='address[street]']").value = data.street;
 
                         return data
                     })
