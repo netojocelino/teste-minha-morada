@@ -110,7 +110,8 @@ Route::post('/register', function (Request $request) {
 
     $addressModel->save();
 
-    return response()->json($userModel);
+    return redirect('/login')
+        ->with([ 'message' => 'Criado com sucesso.' ]);
 })->name('register.action');
 
 Route::get('/forgot-password', function () {
