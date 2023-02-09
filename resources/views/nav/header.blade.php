@@ -9,15 +9,16 @@
                         Home
                 </a>
             </li>
+        @else
+            <li class="nav-item">
+                <a
+                    class="nav-link {{ $page == 'login' ? 'active' : '' }}"
+                    href="{{ url('/login') }}"
+                >
+                        Login
+                </a>
+            </li>
         @endauth
-        <li class="nav-item">
-            <a
-                class="nav-link {{ $page == 'login' ? 'active' : '' }}"
-                href="{{ url('/login') }}"
-            >
-                    Login
-            </a>
-        </li>
         <li class="nav-item">
             <a
                 class="nav-link {{ $page == 'signup' ? 'active' : '' }}"
