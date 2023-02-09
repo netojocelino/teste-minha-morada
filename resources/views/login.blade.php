@@ -16,6 +16,9 @@
             <div class="py-5 text-center">
                 <h1>Login</h1>
 
+                <div class="alert alert-success" style="{{ empty(session('message')) ? 'display: none;' : '' }}" role="alert" name="error">
+                    <span>{{ session('message') }}</span>
+                </div>
 
                 <form class="card p-2" method="POST" action="{{ route('forms.login') }}">
                     @csrf

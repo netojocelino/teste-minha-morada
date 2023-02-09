@@ -170,7 +170,7 @@ Route::post('/forgot-password', function (Request $request) {
     );
 
     return $status === Password::RESET_LINK_SENT
-        ? redirect('/login')
+        ? redirect('/login')->with(['message' => __($status)])
         : back()->withErrors(['email' => __($status)]);
 })->name('password.email');
 
