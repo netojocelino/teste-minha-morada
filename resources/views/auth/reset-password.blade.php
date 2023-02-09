@@ -22,12 +22,12 @@
                 <form class="card p-2" method="POST" action="{{ route('password.update') }}">
                     @csrf
 
-                    <div class="input-group">
+                    <div class="input-group mt-4">
                         <label for="password" class="form-label mt-2 col-12 col-md-4">Senha</label>
                         <input type="password" required name="password" class="form-control col-12 col-md-8">
                     </div>
 
-                    <div class="input-group">
+                    <div class="input-group mt-4">
                         <label for="password" class="form-label mt-2 col-12 col-md-4">Confirmar Senha</label>
                         <input type="password" required name="password_confirmation" class="form-control col-12 col-md-8">
                     </div>

@@ -150,7 +150,7 @@ Route::post('/reset-password', function (Request $request) {
         );
 
         return $status === Password::PASSWORD_RESET
-                ? redirect()->route('login')
+                ? redirect()->route('login')->with([ 'message' => __($status) ])
                 : back()->withErrors(['email' => [__($status)]]);
 
     } catch (\Exception $exception) {
