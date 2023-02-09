@@ -15,6 +15,9 @@
             <div class="py-5 text-center">
                 <h1>Cadastrar</h1>
 
+                <div class="alert alert-danger" style="display: none;" role="alert" name="error">
+                    <span></span>
+                </div>
 
                 <form class="card p-2" method="POST" action="{{ route('register.action') }}">
                     @csrf
@@ -104,6 +107,7 @@
     <script>
         const $btn = document.querySelector("[name=signup]");
         const $cep = document.querySelector("[name=cep]");
+        const $error = document.querySelector("[name='error']");
         let cepDebounce = null;
 
         const signBtn = async (e) => {
@@ -181,6 +185,7 @@
         $btn.addEventListener('click', signBtn)
         $cep.addEventListener('input', function (e) {
             e.preventDefault();
+            $error.style.display = 'none'
             clearTimeout(cepDebounce);
 
             cepDebounce = setTimeout(() => {
@@ -205,8 +210,10 @@
                         return data
                     })
 
-
-                    .catch((err) => console.error(err))
+                    .catch((err) => {
+                        $error.style.display = 'block'
+                        $error.querySelector('span').innerText = `Ocorreu um erro ao carregar endereço`
+                    })
                     .finally(() => {
                         $cep.disabled = false
                     })
