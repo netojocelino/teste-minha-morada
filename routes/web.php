@@ -23,7 +23,7 @@ Route::get('/', function () {
         'users' => Model\User::paginate(),
     ]);
 })
-// ->middleware('auth')
+->middleware('auth')
 ->name('dashboard');
 
 Route::get('/login', function () {
@@ -112,7 +112,7 @@ Route::post('/register', function (Request $request) {
 
 Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
-})->middleware('guest')->name('password.request');
+})->name('password.request');
 
 Route::get('/reset-password/{token}', function (string $token, Request $request) {
     return view('auth.reset-password', [
