@@ -110,7 +110,12 @@ Route::post('/register', function (Request $request) {
 
     $addressModel->save();
 
-    return redirect('/login')
+    Auth::attempt([
+        'email' => $body['email'],
+        'password' => $body['password'],
+    ]);
+
+    return redirect('/')
         ->with([ 'message' => 'Criado com sucesso.' ]);
 })->name('register.action');
 
