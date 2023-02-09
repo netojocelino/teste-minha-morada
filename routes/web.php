@@ -160,6 +160,21 @@ Route::post('/reset-password', function (Request $request) {
     }
 })->name('password.update');
 
+Route::post('/forgot-password', function (Request $request) {
+    $request->validate([
+        'email' => 'required|email',
+    ]);
+
+    $status = Password::sendResetLink(
+        $request->only('email')
+    );
+
+    return $status === Password::RESET_LINK_SENT
+        ? redirect('/login')
+        : back()->withErrors(['email' => __($status)]);
+})->name('password.email');
+
+
 Route::get('/logout', function () {
     Auth::logout();
     return redirect('/login');

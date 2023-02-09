@@ -17,8 +17,12 @@
             <div class="py-5 text-center">
                 <h1>Login</h1>
 
+                <div class="alert alert-danger" style="{{ empty($errors->all()) ? 'display: none;' : '' }}" role="alert" name="error">
+                    <span>{{ implode(" ",$errors->all()) }}</span>
+                </div>
 
                 <form class="card p-2" method="POST" action="{{ route('password.email') }}">
+                    @csrf
                     <div class="input-group">
                         <label for="email" class="form-label mt-2 col-12 col-md-4">Endereço de email</label>
                         <input type="email" required name="email" class="form-control col-12 col-md-8">

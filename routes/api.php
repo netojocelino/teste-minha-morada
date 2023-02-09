@@ -63,18 +63,3 @@ Route::get('/cep', function (Request $request) {
     }
 });
 
-Route::post('/forgot-password', function (Request $request) {
-    $request->validate([
-        'email' => 'required|email',
-    ]);
-
-    $status = Password::sendResetLink(
-        $request->only('email')
-    );
-
-    return response()
-        ->json([
-            'email' => $request->email,
-            'status' => $status,
-        ]);
-})->name('password.email');
