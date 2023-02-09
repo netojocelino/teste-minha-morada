@@ -11,6 +11,7 @@
 </head>
 <body class="bg-light">
     <div class="container">
+        @include('nav.header', ['page' => 'signup'])
         <main>
             <div class="py-5 text-center">
                 <h1>Cadastrar</h1>
