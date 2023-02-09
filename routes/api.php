@@ -78,36 +78,3 @@ Route::post('/forgot-password', function (Request $request) {
             'status' => $status,
         ]);
 })->name('password.email');
-
-
-
-Route::post('/reset-password', function (Request $request) {
-    try {
-        $request->validate([
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|confirmed',
-        ]);
-
-        $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user, $password) {
-                $user->forceFill([
-                    'password' => Hash::make($password)
-                ])->setRememberToken(Str::random(60));
-
-                $user->save();
-
-                event(new PasswordReset($user));
-            }
-        );
-
-        return response()
-            ->json([
-                'status' => $status,
-                'email' => $request->email,
-            ]);
-    } catch (\Exception $exception) {
-        return response($exception->getMessage(), 500);
-    }
-})->name('password.update');
