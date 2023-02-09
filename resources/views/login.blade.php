@@ -16,8 +16,12 @@
             <div class="py-5 text-center">
                 <h1>Login</h1>
 
-                <div class="alert alert-success" style="{{ empty(session('message')) ? 'display: none;' : '' }}" role="alert" name="error">
+                <div class="alert alert-success" style="{{ empty(session('message')) ? 'display: none;' : '' }}" role="alert">
                     <span>{{ session('message') }}</span>
+                </div>
+
+                <div class="alert alert-danger" style="{{ empty($errors->all()) ? 'display: none;' : '' }}" role="alert">
+                    <span>{{ implode(" ",$errors->all()) }}</span>
                 </div>
 
                 <form class="card p-2" method="POST" action="{{ route('forms.login') }}">

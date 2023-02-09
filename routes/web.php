@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Requests as Validate;
 use App\Models as Model;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
@@ -33,14 +34,9 @@ Route::get('/login', function () {
     return view('login');
 })->name('login');
 
-Route::post('/auth/login', function (Request $request) {
+Route::post('/auth/login', function (Validate\LoginRequest $request) {
     try {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-        $userData = $request->only([
+        $userData = $request->safe([
             'email',
             'password',
         ]);
@@ -49,10 +45,10 @@ Route::post('/auth/login', function (Request $request) {
             return redirect('/');
         }
 
-        return redirect('/');
+        return back()->withErrors('Credenciais inválidas.');
     } catch (\Exception $exception) {
         return redirect('/login')
-            ->withErrors('Invalid credentials');
+            ->withErrors('Credenciais inválidas.');
     }
 })->name('forms.login');
 
