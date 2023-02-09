@@ -63,41 +63,38 @@ Route::post('/register', function (Validate\RegisterRequest $request) {
         return back()->withErrors($validator->errors()->all());
     }
 
-    $body = $request->safe([
+    $userBody = $request->safe([
         "full_name",
         "email",
         "password",
+    ]);
+
+    $addressBody = $request->safe([
         "address.cep",
         "address.state",
         "address.number",
         "address.city",
         "address.neighborhood",
         "address.street",
-    ]);
+    ])['address'];
 
     $userModel = new Model\User([
-        "name" => $body["full_name"],
-        "email" => $body["email"],
-        "password" => Hash::make($body["password"]),
+        "name" => $userBody["full_name"],
+        "email" => $userBody["email"],
+        "password" => Hash::make($userBody["password"]),
     ]);
 
     $userModel->save();
 
-    $addressModel = new Model\Address([
-        "cep" => $body['address']['cep'],
-        "state" => $body['address']['state'],
-        "number" => $body['address']['number'],
-        "city" => $body['address']['city'],
-        "neighborhood" => $body['address']['neighborhood'],
-        "street" => $body['address']['street'],
+    $addressModel = new Model\Address(array_merge($addressBody, [
         "user_id" => $userModel->id,
-    ]);
+    ]));
 
     $addressModel->save();
 
     Auth::attempt([
-        'email' => $body['email'],
-        'password' => $body['password'],
+        'email' => $userBody['email'],
+        'password' => $userBody['password'],
     ]);
 
     return redirect('/')
